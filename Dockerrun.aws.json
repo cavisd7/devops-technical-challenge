@@ -1,0 +1,76 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "volumes": [                                                                                  
+        {                                                                                         
+            "host": {
+                "sourcePath": "db-data"
+            },
+            "name": "Db-Data"
+        },
+        {
+            "host": {
+                "sourcePath": "./back-end/"
+            },
+            "name": "_Back-End"
+        },
+        {
+            "host": {
+                "sourcePath": "./front-end/"
+            },
+            "name": "_Front-End"
+        }
+    ],
+    "containerDefinitions": [
+        {
+          "name": "backend",
+          "image": "caseyjm/spig-back",
+          "hostname": "backend",
+          "essential": true,
+          "mountPoints": [
+            {
+                "containerPath": "/usr/src/app",
+                "sourceVolume": "_Back-End"
+            }
+          ],
+          "portMappings": [
+              {
+                "hostPort": 3000,
+                "containerPort": 3000
+              }
+            ],
+          "memory": 400
+        },
+        {
+          "name": "db",
+          "image": "postgres",
+          "hostname": "db",
+          "essential": true,
+          "mountPoints": [                                                                      
+            {                                                                                 
+                "containerPath": "/usr/local/pgsql/data",                                     
+                "sourceVolume": "Db-Data"                                                     
+            }                                                                                 
+          ],   
+          "memory": 400
+        },
+        {
+        "name": "frontend",
+        "image": "caseyjm/spig-front",
+        "hostname": "frontend",
+        "essential": true,
+        "mountPoints": [                                                                      
+            {                                                                                 
+                "containerPath": "/usr/src/app",                                              
+                "sourceVolume": "_Front-End"                                                  
+            }                                                                                 
+        ],            
+        "portMappings": [
+          {
+            "hostPort": 80,
+            "containerPort": 80
+          }
+        ],
+        "memory": 400
+      }
+    ]
+}

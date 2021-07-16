@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  build:
+    commands:
+      # Build the docker images
+      - echo Building docker images...
+      - docker build -t caseyjm/spig-front ./front-end
+      - docker build -t caseyjm/spig-back ./back-end
+      # Log in to docker CLI
+      - echo "$DOCKER_PW" | docker login -u "$DOCKER_ID" --password-stdin
+  post_build:
+    commands:
+      # Push images to dockerhub
+      - echo Pushing docker images to dockerhub...
+      - docker push caseyjm/spig-front
+      - docker push caseyjm/spig-back
