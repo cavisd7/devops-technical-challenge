@@ -1,76 +1,100 @@
 {
-    "AWSEBDockerrunVersion": 2,
-    "volumes": [                                                                                  
-        {                                                                                         
-            "host": {
-                "sourcePath": "db-data"
-            },
-            "name": "Db-Data"
-        },
-        {
-            "host": {
-                "sourcePath": "./back-end/"
-            },
-            "name": "_Back-End"
-        },
-        {
-            "host": {
-                "sourcePath": "./front-end/"
-            },
-            "name": "_Front-End"
-        }
-    ],
-    "containerDefinitions": [
-        {
-          "name": "backend",
-          "image": "caseyjm/spig-back",
-          "hostname": "backend",
-          "essential": true,
-          "mountPoints": [
-            {
-                "containerPath": "/usr/src/app",
-                "sourceVolume": "_Back-End"
-            }
-          ],
-          "portMappings": [
-              {
-                "hostPort": 3000,
-                "containerPort": 3000
-              }
-            ],
-          "memory": 400
-        },
-        {
-          "name": "db",
-          "image": "postgres",
-          "hostname": "db",
-          "essential": true,
-          "mountPoints": [                                                                      
-            {                                                                                 
-                "containerPath": "/usr/local/pgsql/data",                                     
-                "sourceVolume": "Db-Data"                                                     
-            }                                                                                 
-          ],   
-          "memory": 400
-        },
-        {
-        "name": "frontend",
-        "image": "caseyjm/spig-front",
-        "hostname": "frontend",
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [                                                                                  
+      {                                                                                         
+          "host": {
+              "sourcePath": "db-data"
+          },
+          "name": "Db-Data"
+      },
+      {
+          "host": {
+              "sourcePath": "/var/app/current/back-end/"
+          },
+          "name": "_Back-End"
+      },
+      {
+          "host": {
+              "sourcePath": "/var/app/current/front-end/"
+          },
+          "name": "_Front-End"
+      }
+  ],
+  "containerDefinitions": [
+      {
+        "name": "backend",
+        "image": "559783161703.dkr.ecr.us-east-2.amazonaws.com/spig-devops:spig-back-latest",
+        "hostname": "backend",
         "essential": true,
-        "mountPoints": [                                                                      
-            {                                                                                 
-                "containerPath": "/usr/src/app",                                              
-                "sourceVolume": "_Front-End"                                                  
-            }                                                                                 
-        ],            
-        "portMappings": [
+        "mountPoints": [
           {
-            "hostPort": 80,
-            "containerPort": 80
+              "containerPath": "/usr/src/app",
+              "sourceVolume": "_Back-End"
           }
         ],
-        "memory": 400
-      }
-    ]
+        "portMappings": [
+            {
+              "hostPort": 3000,
+              "containerPort": 3000
+            }
+          ],
+        "memory": 200,
+        "links": [
+          "db"
+        ]
+      },
+      {
+        "name": "db",
+        "image": "postgres",
+        "hostname": "db",
+        "essential": true,
+        "environment": [
+          {
+              "name": "POSTGRES_HOST",
+              "value": "db"
+          },
+          {
+            "name": "POSTGRES_USER",
+            "value": "postgres"
+          },
+          {
+            "name": "POSTGRES_PASSWORD",
+            "value": "postgres"
+          },
+          {
+            "name": "POSTGRES_DB",
+            "value": "test"
+          }
+      ],
+        "mountPoints": [                                                                      
+          {                                                                                 
+              "containerPath": "/usr/local/pgsql/data",                                     
+              "sourceVolume": "Db-Data"                                                     
+          }                                                                                 
+        ],   
+        "memory": 120
+      },
+      {
+      "name": "frontend",
+      "image": "559783161703.dkr.ecr.us-east-2.amazonaws.com/spig-devops:spig-front-latest",
+      "hostname": "frontend",
+      "essential": true,
+      "mountPoints": [                                                                      
+          {                                                                                 
+              "containerPath": "/usr/src/app",                                              
+              "sourceVolume": "_Front-End"                                                  
+          }                                                                                 
+      ],            
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "memory": 50,
+      "links": [
+        "backend"
+      ]
+    }
+  ]
 }
