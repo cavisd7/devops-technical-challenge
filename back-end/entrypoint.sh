@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Clear pid file if necessary or create pid file to avoid 'server.pid' file not found error
 if [ -f /usr/src/app/tmp/pids/server.pid ]; 
 then
     echo "Clearing pidfile..."
@@ -10,6 +11,8 @@ else
     touch /usr/src/app/tmp/pids/server.pid
 fi
 
+# Initialize and seed database
 bundle exec rake db:setup
 
+# Execute defualt instruction
 exec bundle exec "$@"
