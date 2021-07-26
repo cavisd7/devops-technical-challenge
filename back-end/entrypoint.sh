@@ -14,5 +14,5 @@ fi
 # Initialize and seed database
 bundle exec rake db:setup
 
-# Execute defualt instruction
+# Execute container's default instruction
 exec bundle exec "$@"

@@ -6,18 +6,6 @@
               "sourcePath": "db-data"
           },
           "name": "Db-Data"
-      },
-      {
-          "host": {
-              "sourcePath": "/var/app/current/back-end/"
-          },
-          "name": "_Back-End"
-      },
-      {
-          "host": {
-              "sourcePath": "/var/app/current/front-end/"
-          },
-          "name": "_Front-End"
       }
   ],
   "containerDefinitions": [
@@ -26,12 +14,6 @@
         "image": "559783161703.dkr.ecr.us-east-2.amazonaws.com/spig-devops:spig-back-latest",
         "hostname": "backend",
         "essential": true,
-        "mountPoints": [
-          {
-              "containerPath": "/usr/src/app",
-              "sourceVolume": "_Back-End"
-          }
-        ],
         "portMappings": [
             {
               "hostPort": 3000,
@@ -79,12 +61,6 @@
       "image": "559783161703.dkr.ecr.us-east-2.amazonaws.com/spig-devops:spig-front-latest",
       "hostname": "frontend",
       "essential": true,
-      "mountPoints": [                                                                      
-          {                                                                                 
-              "containerPath": "/usr/src/app",                                              
-              "sourceVolume": "_Front-End"                                                  
-          }                                                                                 
-      ],            
       "portMappings": [
         {
           "hostPort": 80,

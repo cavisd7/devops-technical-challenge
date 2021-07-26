@@ -19,17 +19,27 @@ services:
     
     backend:
         build: ./back-end/
-        volumes: 
-            - ./back-end/:/usr/src/app
+        #volumes: 
+        #    - ./back-end/:/usr/src/app
         ports:
             - '3000:3000'
         depends_on: 
             db:
                 condition: service_healthy
     
+    # Production
+    #frontend:
+    #    build: ./front-end/
+    #    ports:
+    #        - '4000:80'
+    
+    # Development
     frontend:
-        build: ./front-end/
-        volumes: 
+        build:
+            context: ./front-end/
+            dockerfile: Dockerfile.dev
+        volumes:
             - ./front-end/:/usr/src/app
-        ports:
-            - '4000:80'
+            - /usr/src/app/node_modules
+        ports: 
+            - '1234:1234'
